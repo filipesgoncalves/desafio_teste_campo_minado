@@ -111,7 +111,7 @@ class CampoMinado {
       cel.bandeira = false;
       this.bandeiras--;
     } else {
-      if (this.bandeiras >= this.totalBombas) throw new Error('Todas as bandeiras já foram usadas');
+      // como no jogo clássico, não há limite: com bandeiras a mais, o contador fica negativo
       cel.bandeira = true;
       this.bandeiras++;
     }
@@ -449,17 +449,25 @@ describe('Bandeiras', () => {
     expect(() => jogo.alternarBandeira(0, 4)).toThrow('célula aberta');
   });
 
-  test('são no máximo 40 bandeiras', () => {
+  test('o contador diminui com cada bandeira e fica negativo se houver bandeiras a mais', () => {
     const jogo = new CampoMinado({ posicoesBombas: cenarioParede() });
     let colocadas = 0;
-    for (let l = 0; l < LINHAS && colocadas < 40; l++) {
-      for (let c = 6; c < 15 && colocadas < 40; c++) {
+    for (let l = 0; l < LINHAS && colocadas < 41; l++) {
+      for (let c = 6; c < 15 && colocadas < 41; c++) {
         jogo.alternarBandeira(l, c);
         colocadas++;
+        if (colocadas === 40) expect(jogo.bombasRestantes).toBe(0);
       }
     }
-    expect(jogo.bombasRestantes).toBe(0);
-    expect(() => jogo.alternarBandeira(13, 0)).toThrow('Todas as bandeiras');
+    expect(jogo.bandeiras).toBe(41);
+    expect(jogo.bombasRestantes).toBe(-1);
+  });
+
+  test('o contador mostra bandeiras, não bombas encontradas: bandeira errada também conta', () => {
+    const jogo = new CampoMinado({ posicoesBombas: cenarioParede() });
+    jogo.alternarBandeira(0, 0); // célula segura
+    expect(jogo.bombasRestantes).toBe(39);
+    expect(contarBombas(jogo)).toBe(40);
   });
 
   test('a cascata não abre célula com bandeira', () => {
