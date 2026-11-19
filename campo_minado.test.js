@@ -528,6 +528,38 @@ describe('Atalho: abrir as vizinhas de um número', () => {
     jogo.abrir(0, 0);
     expect(() => jogo.abrirVizinhas(0, 0)).toThrow('célula numérica já aberta');
   });
+
+  test('com bandeira errada, para de abrir assim que a bomba explode', () => {
+    const jogo = new CampoMinado({ posicoesBombas: cenarioParede() });
+    jogo.abrir(6, 6);
+    jogo.alternarBandeira(6, 5);
+    jogo.alternarBandeira(7, 5);
+    jogo.alternarBandeira(5, 6);
+    expect(jogo.abrirVizinhas(6, 6)).toBe(0);
+    expect(jogo.estado).toBe('derrota');
+    expect(jogo.explosao).toEqual({ linha: 5, coluna: 5 });
+    expect(jogo.celula(7, 7).aberta).toBe(false);
+  });
+
+  test('o atalho que abre a última célula segura vence o jogo', () => {
+    const jogo = new CampoMinado({ posicoesBombas: cenarioParede() });
+    jogo.alternarBandeira(13, 15);
+    abrirTodasAsSeguras(jogo);
+    expect(jogo.celulasAbertas).toBe(211);
+    jogo.alternarBandeira(13, 15);
+    jogo.alternarBandeira(12, 15);
+    jogo.alternarBandeira(12, 16);
+    expect(jogo.abrirVizinhas(13, 16)).toBe(1);
+    expect(jogo.estado).toBe('vitoria');
+    expect(jogo.celulasAbertas).toBe(212);
+  });
+
+  test('depois do fim o atalho não é aceito', () => {
+    const jogo = new CampoMinado({ posicoesBombas: cenarioParede() });
+    jogo.abrir(0, 4);
+    jogo.abrir(0, 5);
+    expect(() => jogo.abrirVizinhas(0, 4)).toThrow('O jogo já terminou');
+  });
 });
 
 describe('Derrota', () => {
@@ -547,6 +579,13 @@ describe('Derrota', () => {
     jogo.abrir(0, 5);
     expect(() => jogo.abrir(0, 0)).toThrow('O jogo já terminou');
     expect(() => jogo.alternarBandeira(0, 0)).toThrow('O jogo já terminou');
+  });
+
+  test('o mapa em texto mostra as bombas reveladas com *', () => {
+    const jogo = new CampoMinado({ posicoesBombas: cenarioParede() });
+    jogo.abrir(0, 0);
+    jogo.abrir(3, 5);
+    expect(jogo.visualizar().split('\n')[0]).toBe('....2*#########**#');
   });
 });
 
