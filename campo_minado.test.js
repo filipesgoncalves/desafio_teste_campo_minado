@@ -88,9 +88,9 @@ class CampoMinado {
   abrir(l, c) {
     this._validarEmAndamento();
     this._validarPosicao(l, c);
-    if (!this.bombasPosicionadas) this._sortearBombas(l, c);
     const cel = this.tabuleiro[l][c];
     if (cel.bandeira) throw new Error('Não é possível abrir uma célula com bandeira');
+    if (!this.bombasPosicionadas) this._sortearBombas(l, c);
     if (cel.aberta) return 0;
     if (cel.bomba) {
       this._perder(l, c);
@@ -351,6 +351,18 @@ describe('Primeiro clique', () => {
       expect(jogo.estado).not.toBe('derrota');
       expect(jogo.vizinhos(7, 9).some(([l, c]) => jogo.tabuleiro[l][c].bomba)).toBe(false);
       expect(contarBombas(jogo)).toBe(40);
+    }
+  });
+
+  test('clique recusado em célula com bandeira não sorteia as bombas', () => {
+    for (let semente = 1; semente <= 50; semente++) {
+      const jogo = new CampoMinado({ aleatorio: criarAleatorio(semente) });
+      jogo.alternarBandeira(0, 0);
+      expect(() => jogo.abrir(0, 0)).toThrow('com bandeira');
+      expect(contarBombas(jogo)).toBe(0);
+      jogo.abrir(7, 9);
+      expect(jogo.estado).not.toBe('derrota');
+      expect(jogo.vizinhos(7, 9).some(([l, c]) => jogo.tabuleiro[l][c].bomba)).toBe(false);
     }
   });
 
