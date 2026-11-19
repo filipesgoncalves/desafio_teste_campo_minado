@@ -14,7 +14,7 @@ Casos de teste em JavaScript (Jest) que simulam uma partida de **Campo minado**.
 - As bombas são sorteadas no primeiro clique. A célula clicada e as 8 vizinhas dela nunca recebem bomba, então o primeiro clique sempre abre uma área.
 - Cada célula segura mostra quantas bombas existem nas 8 vizinhas.
 - Abrir uma célula vazia (número 0) abre as vizinhas em cascata, até chegar às células com número.
-- Bandeira: só em célula fechada, no máximo 40, e célula com bandeira não pode ser aberta.
+- Bandeira: só em célula fechada, e célula com bandeira não pode ser aberta. O contador mostra 40 menos as bandeiras colocadas. Como no jogo clássico, não há limite de bandeiras: com bandeiras a mais, o contador fica negativo.
 - Atalho: numa célula numérica aberta com o mesmo número de bandeiras ao redor, abre todas as vizinhas sem bandeira. Se uma bandeira estiver errada, a bomba esquecida explode.
 - Derrota: abrir uma bomba encerra o jogo e revela todas as bombas.
 - Vitória: abrir as 212 células seguras. As bombas recebem bandeira automaticamente.
@@ -45,7 +45,7 @@ O arquivo tem três partes:
 | Primeiro clique | Nunca é bomba nem tem bomba vizinha (várias sementes e 200 partidas), e a mesma semente gera o mesmo tabuleiro |
 | Números das células | O número de cada célula confere com as bombas vizinhas, em cenário fixo e sorteado |
 | Abrir célula | Célula numérica abre só ela, cascata para na parede de bombas, reabrir não muda nada, posição fora do tabuleiro é recusada |
-| Bandeiras | Marcar e desmarcar, contador de bombas restantes, bandeira antes do primeiro clique, célula com bandeira não abre, célula aberta não recebe bandeira, limite de 40, cascata respeita bandeira |
+| Bandeiras | Marcar e desmarcar, contador de bombas restantes, bandeira antes do primeiro clique, célula com bandeira não abre, célula aberta não recebe bandeira, contador negativo com bandeiras a mais, bandeira errada também conta no contador, cascata respeita bandeira |
 | Atalho | Abre as vizinhas com as bandeiras certas, explode com bandeira errada, recusa quando o número de bandeiras não bate |
 | Derrota | Bomba encerra o jogo, revela as bombas e bloqueia novas jogadas |
 | Vitória | Abrir as 212 seguras vence, uma única cascata pode vencer, falta de uma célula impede a vitória, jogo bloqueado depois |
