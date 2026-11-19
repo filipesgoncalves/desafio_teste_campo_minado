@@ -42,7 +42,7 @@ O arquivo tem três partes:
 | Grupo | O que verifica |
 |---|---|
 | Tabuleiro | Tamanho 18 x 14, estado inicial, 40 bombas sorteadas só no primeiro clique, cenários com bomba a mais, repetida ou fora do tabuleiro, quantidade de vizinhos de canto, borda e meio |
-| Primeiro clique | Nunca é bomba nem tem bomba vizinha (várias sementes e 200 partidas), e a mesma semente gera o mesmo tabuleiro |
+| Primeiro clique | Nunca é bomba nem tem bomba vizinha (várias sementes e 200 partidas), clique recusado por bandeira não sorteia as bombas, e a mesma semente gera o mesmo tabuleiro |
 | Números das células | O número de cada célula confere com as bombas vizinhas, em cenário fixo e sorteado |
 | Abrir célula | Célula numérica abre só ela, cascata para na parede de bombas, reabrir não muda nada, posição fora do tabuleiro é recusada |
 | Bandeiras | Marcar e desmarcar, contador de bombas restantes, bandeira antes do primeiro clique, célula com bandeira não abre, célula aberta não recebe bandeira, contador negativo com bandeiras a mais, bandeira errada também conta no contador, cascata respeita bandeira |
@@ -56,3 +56,4 @@ Cada teste monta a própria partida, faz as jogadas e confere o estado do jogo (
 ## Colaborador
 
 - Filipe ([filipesgoncalves](https://github.com/filipesgoncalves))
+- Thiago ([Chizuli](https://github.com/Chizuli))
